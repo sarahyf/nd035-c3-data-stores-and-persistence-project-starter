@@ -4,27 +4,34 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+
+import com.udacity.jdnd.course3.critter.pet.PetType;
 
 @Entity
+//@NamedQuery(name = "Pet.findPetByOwner", query = "select p from Pet p where p.ownerid = :ownerid")
 public class Pet {
     @Id
     @GeneratedValue
     private Long id;
 
-    private String type;
+    private PetType type;
     private String name;
     private LocalDate birthDate;
     private String notes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@ManyToOne
+    @JoinColumn(name = "ownerId")
     private Customer customer;
-
-    @ManyToMany(mappedBy = "skills")
-    private List<Employee> employees;
+    // @ManyToOne(targetEntity = Customer.class)
+    // private Long ownerId;
 
     public Long getId() {
         return this.id;
@@ -34,11 +41,11 @@ public class Pet {
         this.id = id;
     }
 
-    public String getType() {
+    public PetType getType() {
         return this.type;
     }
 
-    public void setType(String type) {
+    public void setType(PetType type) {
         this.type = type;
     }
 
@@ -74,12 +81,12 @@ public class Pet {
         this.customer = customer;
     }
 
-    public List<Employee> getEmployees() {
-        return this.employees;
-    }
+    // public Long getOwnerId() {
+    //     return this.ownerId;
+    // }
 
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
-    }
+    // public void setOwnerId(Long ownerId) {
+    //     this.ownerId = ownerId;
+    // }
 
 }

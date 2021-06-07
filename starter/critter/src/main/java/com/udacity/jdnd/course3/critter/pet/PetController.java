@@ -31,18 +31,33 @@ public class PetController {
     }
 
     @GetMapping
-    public List<PetDTO> getPets(){
+    public List<PetDTO> getPets() {
+        boolean loop = true;
         Iterable<Pet> pets = petService.getAllPets();
         List<PetDTO> listOfPets = new ArrayList<PetDTO>();
 
-        listOfPets.add(convertPetToPetDTO(pets.iterator().next()));
+        while(loop) {
+            if(pets.iterator().hasNext()) {
+                System.out.println(convertPetToPetDTO(pets.iterator().next()).getId());
+                //System.out.println("TO SEE THE PRINT " + convertPetToPetDTO(pets.iterator().next()).getName());
+                listOfPets.add(convertPetToPetDTO(pets.iterator().next()));
 
+            } else {
+                loop = false;
+            }
+        }
         return listOfPets;
     }
 
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
-        throw new UnsupportedOperationException();
+        List<PetDTO> petsDTO = new ArrayList<PetDTO>();
+        List<Pet> pets = petService.getPetsByOwner(ownerId);
+
+        for(int i = 0; i < pets.size(); i++) {
+            petsDTO.add(convertPetToPetDTO(pets.get(i)));
+        }
+        return petsDTO;
     }
 
     private PetDTO convertPetToPetDTO(Pet pet) {

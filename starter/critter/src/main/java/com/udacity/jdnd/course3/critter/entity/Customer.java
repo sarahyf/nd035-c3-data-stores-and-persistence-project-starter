@@ -2,7 +2,9 @@ package com.udacity.jdnd.course3.critter.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -15,8 +17,10 @@ public class Customer {
 
     private String name;
     private String phoneNumber;
+    private String notes;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer", cascade = CascadeType.REMOVE)
+    //@OneToMany(mappedBy = "customer")
     private List<Pet> pets;
 
     public Long getId() {
@@ -41,6 +45,14 @@ public class Customer {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getNotes() {
+        return this.notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public List<Pet> getPets() {

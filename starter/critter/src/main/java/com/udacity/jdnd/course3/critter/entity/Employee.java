@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.entity;
 
+import java.time.DayOfWeek;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -9,27 +10,17 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
+
 @Entity
 public class Employee {
     @Id
     @GeneratedValue
     private Long id;
-
     private String name;
-
-    // @OneToMany(mappedBy = "employee")
-    // private List<Pet> pets;
-
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    private List<Pet> pets;
-
-    //@ManyToMany(mappedBy = "employees")
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Skill> skills;
-
-    @OneToMany(mappedBy = "employee")
-    private List<Schedule> schedules;
-
+    private EmployeeSkill employeeSkill;
+    private DayOfWeek daysAvailable;
+    
     public Long getId() {
         return this.id;
     }
@@ -46,28 +37,20 @@ public class Employee {
         this.name = name;
     }
 
-    public List<Pet> getPets() {
-        return this.pets;
+    public EmployeeSkill getEmployeeSkill() {
+        return this.employeeSkill;
     }
 
-    public void setPets(List<Pet> pets) {
-        this.pets = pets;
+    public void setEmployeeSkill(EmployeeSkill employeeSkill) {
+        this.employeeSkill = employeeSkill;
     }
 
-    public List<Skill> getSkills() {
-        return this.skills;
+    public DayOfWeek getDaysAvailable() {
+        return this.daysAvailable;
     }
 
-    public void setSkills(List<Skill> skills) {
-        this.skills = skills;
-    }
-
-    public List<Schedule> getSchedules() {
-        return this.schedules;
-    }
-
-    public void setSchedules(List<Schedule> schedules) {
-        this.schedules = schedules;
+    public void setDaysAvailable(DayOfWeek daysAvailable) {
+        this.daysAvailable = daysAvailable;
     }
 
 }
