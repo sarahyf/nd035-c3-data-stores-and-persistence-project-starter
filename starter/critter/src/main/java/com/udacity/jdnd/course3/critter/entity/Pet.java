@@ -15,7 +15,6 @@ import javax.persistence.NamedQuery;
 import com.udacity.jdnd.course3.critter.pet.PetType;
 
 @Entity
-//@NamedQuery(name = "Pet.findPetByOwner", query = "select p from Pet p where p.ownerid = :ownerid")
 public class Pet {
     @Id
     @GeneratedValue
@@ -27,11 +26,8 @@ public class Pet {
     private String notes;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    //@ManyToOne
     @JoinColumn(name = "ownerId")
     private Customer customer;
-    // @ManyToOne(targetEntity = Customer.class)
-    // private Long ownerId;
 
     public Long getId() {
         return this.id;
@@ -80,13 +76,4 @@ public class Pet {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
-
-    // public Long getOwnerId() {
-    //     return this.ownerId;
-    // }
-
-    // public void setOwnerId(Long ownerId) {
-    //     this.ownerId = ownerId;
-    // }
-
 }

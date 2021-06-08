@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.Pet;
+import com.udacity.jdnd.course3.critter.user.UserService;
 
 /**
  * Handles web requests related to Pets.
@@ -18,6 +20,8 @@ public class PetController {
 
     @Autowired
     PetService petService;
+    @Autowired
+    UserService userService;
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
@@ -32,20 +36,13 @@ public class PetController {
 
     @GetMapping
     public List<PetDTO> getPets() {
-        boolean loop = true;
         Iterable<Pet> pets = petService.getAllPets();
         List<PetDTO> listOfPets = new ArrayList<PetDTO>();
 
-        while(loop) {
-            if(pets.iterator().hasNext()) {
-                System.out.println(convertPetToPetDTO(pets.iterator().next()).getId());
-                //System.out.println("TO SEE THE PRINT " + convertPetToPetDTO(pets.iterator().next()).getName());
-                listOfPets.add(convertPetToPetDTO(pets.iterator().next()));
-
-            } else {
-                loop = false;
-            }
+        for (Pet p : pets) {
+            listOfPets.add(convertPetToPetDTO(p));
         }
+
         return listOfPets;
     }
 
@@ -62,12 +59,20 @@ public class PetController {
 
     private PetDTO convertPetToPetDTO(Pet pet) {
         PetDTO petDTO = new PetDTO();
+        Customer customer = pet.getCustomer();
+        petDTO.setOwnerId(customer.getId());
         BeanUtils.copyProperties(pet, petDTO);
         return petDTO;
     }
 
     private Pet convertPetDTOToPet(PetDTO petDTO) {
         Pet pet = new Pet();
+        Customer customer = userService.getCustomer(petDTO.getOwnerId()).get();
+        if(customer != null) {
+            pet.setCustomer(customer);
+        } else {
+            throw new UnsupportedOperationException();
+        }
         BeanUtils.copyProperties(petDTO, pet);
         return pet;
     }

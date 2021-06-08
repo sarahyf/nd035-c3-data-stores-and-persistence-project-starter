@@ -1,5 +1,7 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import com.udacity.jdnd.course3.critter.entity.Customer;
@@ -17,6 +19,10 @@ public class UserService {
     public void saveCustomer(Customer customer) {
         customerRepository.save(customer);
         //return customer.getId();
+    }
+
+    public Optional<Customer> getCustomer(long ownerId) {
+        return customerRepository.findById(ownerId);
     }
 
 }

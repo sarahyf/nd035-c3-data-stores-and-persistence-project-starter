@@ -16,9 +16,7 @@ import org.springframework.stereotype.Repository;
 // @Transactional
 public interface PetRepository extends CrudRepository<Pet, Long> {
     
-    //public List<Pet> findPetsByOwner(long ownerId);
-
-    @Query("select p from Pet p where p.name = :name")
-    public List<Pet> findPetsByName(@Param("name") String name);
+    @Query("select p from Pet p where p.customer.id = :ownerId")
+    public List<Pet> findPetsByOwner(@Param("ownerId") long ownerId);
     
 }
