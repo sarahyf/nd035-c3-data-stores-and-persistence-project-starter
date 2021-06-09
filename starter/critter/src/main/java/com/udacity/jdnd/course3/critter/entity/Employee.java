@@ -2,8 +2,10 @@ package com.udacity.jdnd.course3.critter.entity;
 
 import java.time.DayOfWeek;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,8 +20,12 @@ public class Employee {
     @GeneratedValue
     private Long id;
     private String name;
-    private EmployeeSkill employeeSkill;
-    private DayOfWeek daysAvailable;
+
+    @ElementCollection
+    private Set<EmployeeSkill> skills;
+
+    @ElementCollection
+    private Set<DayOfWeek> daysAvailable;
     
     public Long getId() {
         return this.id;
@@ -37,19 +43,19 @@ public class Employee {
         this.name = name;
     }
 
-    public EmployeeSkill getEmployeeSkill() {
-        return this.employeeSkill;
+    public Set<EmployeeSkill> getSkills() {
+        return this.skills;
     }
 
-    public void setEmployeeSkill(EmployeeSkill employeeSkill) {
-        this.employeeSkill = employeeSkill;
+    public void setSkills(Set<EmployeeSkill> skills) {
+        this.skills = skills;
     }
 
-    public DayOfWeek getDaysAvailable() {
+    public Set<DayOfWeek> getDaysAvailable() {
         return this.daysAvailable;
     }
 
-    public void setDaysAvailable(DayOfWeek daysAvailable) {
+    public void setDaysAvailable(Set<DayOfWeek> daysAvailable) {
         this.daysAvailable = daysAvailable;
     }
 

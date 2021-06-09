@@ -6,6 +6,8 @@ import javax.transaction.Transactional;
 
 import com.udacity.jdnd.course3.critter.entity.Customer;
 import com.udacity.jdnd.course3.critter.entity.CustomerRepository;
+import com.udacity.jdnd.course3.critter.entity.Employee;
+import com.udacity.jdnd.course3.critter.entity.EmployeeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
     @Autowired
     CustomerRepository customerRepository;
+
+    @Autowired
+    EmployeeRepository employeeRepository;
 
     @Transactional
     public void saveCustomer(Customer customer) {
@@ -26,6 +31,14 @@ public class UserService {
 
     public Iterable<Customer> getAllCustomers() {
         return customerRepository.findAll();
+    }
+
+    public void saveEmployee(Employee employee) {
+        employeeRepository.save(employee);
+    }
+
+    public Optional<Employee> getEmployee(long employeeId) {
+        return employeeRepository.findById(employeeId);
     }
 
 }
