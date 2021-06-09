@@ -18,11 +18,14 @@ public class UserService {
     @Transactional
     public void saveCustomer(Customer customer) {
         customerRepository.save(customer);
-        //return customer.getId();
     }
 
-    public Optional<Customer> getCustomer(long ownerId) {
-        return customerRepository.findById(ownerId);
+    public Optional<Customer> getCustomer(long customerId) {
+        return customerRepository.findById(customerId);
+    }
+
+    public Iterable<Customer> getAllCustomers() {
+        return customerRepository.findAll();
     }
 
 }
