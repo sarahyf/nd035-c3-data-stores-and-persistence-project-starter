@@ -1,6 +1,9 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import java.time.DayOfWeek;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -33,12 +36,25 @@ public class UserService {
         return customerRepository.findAll();
     }
 
+    // @Transactional
     public void saveEmployee(Employee employee) {
         employeeRepository.save(employee);
     }
 
     public Optional<Employee> getEmployee(long employeeId) {
         return employeeRepository.findById(employeeId);
+    }
+
+    public void updateEmployeeSchedule(Set<DayOfWeek> daysAvailable, long employeeId) {
+        // System.out.println(daysAvailable);
+        // System.out.println(daysAvailable.iterator());
+
+       employeeRepository.updateEmployeeSchedule(daysAvailable, employeeId);
+    // employeeRepository.updateEmployeeSchedule(employeeId, "S");
+    }
+
+    public List<Employee> findEmployeesForService(Set<EmployeeSkill> skills, DayOfWeek dayOfWeek) {
+        return employeeRepository.findEmployeesForService(skills, dayOfWeek);
     }
 
 }

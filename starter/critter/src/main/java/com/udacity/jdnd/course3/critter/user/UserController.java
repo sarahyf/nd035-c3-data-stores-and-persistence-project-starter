@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -85,12 +87,30 @@ public class UserController {
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        Employee employee = userService.getEmployee(employeeId).get();
+        if(employee != null) {
+            userService.updateEmployeeSchedule(daysAvailable, employeeId);
+        }
     }
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        // Calendar c = Calendar.getInstance();
+        // c.setTime(employeeDTO.getDate().);
+        // int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+
+        List<Employee> employee = userService.findEmployeesForService(employeeDTO.getSkills(), employeeDTO.getDate().getDayOfWeek());
+        List<EmployeeDTO> availableEmployees = null;
+
+        if(employee != null) {
+            availableEmployees = new ArrayList<EmployeeDTO>();
+            for(Employee e : employee) {
+                availableEmployees.add(convertEmployeeToEmployeeDTO(e));
+            }
+        } else {
+            // throw new Exception("no employees for service");
+        }
+        return availableEmployees;
     }
 
     private CustomerDTO convertCustomerToCustomerDTO(Customer customer) {
