@@ -24,8 +24,8 @@ public class UserService {
     EmployeeRepository employeeRepository;
 
     @Transactional
-    public void saveCustomer(Customer customer) {
-        customerRepository.save(customer);
+    public Customer saveCustomer(Customer customer) {
+        return customerRepository.save(customer);
     }
 
     public Optional<Customer> getCustomer(long customerId) {
@@ -37,8 +37,8 @@ public class UserService {
     }
 
     // @Transactional
-    public void saveEmployee(Employee employee) {
-        employeeRepository.save(employee);
+    public Employee saveEmployee(Employee employee) {
+        return employeeRepository.save(employee);
     }
 
     public Optional<Employee> getEmployee(long employeeId) {

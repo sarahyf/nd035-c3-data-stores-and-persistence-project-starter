@@ -19,8 +19,8 @@ public class PetService {
     PetRepository petRepository;
 
     @Transactional
-    public void savePet(Pet pet) {
-        petRepository.save(pet);
+    public Pet savePet(Pet pet) {
+        return petRepository.save(pet);
     }
 
     public Pet getPet(long petId) {
