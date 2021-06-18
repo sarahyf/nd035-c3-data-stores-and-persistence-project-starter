@@ -44,6 +44,10 @@ public class ScheduleController {
         List<Employee> employees = userService.findEmployeesForService(schedule.getActivities(),
                 schedule.getDate().getDayOfWeek());
 
+        if(employees != null && !employees.isEmpty()) {
+            return convertScheduleToScheduleDTO(scheduleService.createSchedule(schedule));
+        }
+
         // for(Employee e : schedule.getEmployees()) {
         //     try {
         //             if(userService.getEmployee(e.getId()) == null || !employees.contains(e)) {
@@ -54,12 +58,12 @@ public class ScheduleController {
         //     }
         // }
 
-        return convertScheduleToScheduleDTO(scheduleService.createSchedule(schedule));
+        throw new UnsupportedOperationException();
     }
 
     @GetMapping
     public List<ScheduleDTO> getAllSchedules() {
-        Iterable<Schedule> schedules = scheduleService.getAllSchedules();
+        List<Schedule> schedules = scheduleService.getAllSchedules();
         List<ScheduleDTO> listOfSchedules = new ArrayList<ScheduleDTO>();
 
         for (Schedule s : schedules) {
@@ -71,11 +75,27 @@ public class ScheduleController {
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        List<ScheduleDTO> scheduleDTOs = null;
-        List<Schedule> schedules = scheduleService.getScheduleForPet(petId);
+        // List<ScheduleDTO> scheduleDTOs = new ArrayList<ScheduleDTO>();
+        // List<Schedule> schedules = scheduleService.getScheduleForPet(petId);
 
-        if(schedules != null) {
-            scheduleDTOs = new ArrayList<ScheduleDTO>();
+        // if(!schedules.isEmpty()) {
+        //     for (Schedule s : schedules) {
+        //         scheduleDTOs.add(convertScheduleToScheduleDTO(s));
+        //     }
+        // }
+
+        return findSpecificSchedules(scheduleService.getScheduleForPet(petId));
+        // return scheduleDTOs;
+    }
+
+    @GetMapping("/employee/{employeeId}")
+    public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
+        return findSpecificSchedules(scheduleService.getScheduleForEmployee(employeeId));
+    }
+
+    public List<ScheduleDTO> findSpecificSchedules(List<Schedule> schedules) {
+        List<ScheduleDTO> scheduleDTOs = new ArrayList<ScheduleDTO>();
+        if (!schedules.isEmpty()) {
             for (Schedule s : schedules) {
                 scheduleDTOs.add(convertScheduleToScheduleDTO(s));
             }
@@ -84,19 +104,12 @@ public class ScheduleController {
         return scheduleDTOs;
     }
 
-    @GetMapping("/employee/{employeeId}")
-    public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
-        List<ScheduleDTO> scheduleDTOs = null;
-        List<Schedule> schedules = scheduleService.getScheduleForEmployee(employeeId);
-
-        if(schedules != null) {
-            scheduleDTOs = new ArrayList<ScheduleDTO>();
-            for (Schedule s : schedules) {
-                scheduleDTOs.add(convertScheduleToScheduleDTO(s));
-            }
+    public ScheduleDTO findSpecificSchedules2(Schedule schedule) {
+        ScheduleDTO scheduleDTO = new ScheduleDTO();
+        if (schedule != null) {
+                scheduleDTO = convertScheduleToScheduleDTO(schedule);
         }
-        
-        return scheduleDTOs;
+        return scheduleDTO;
     }
 
     @GetMapping("/customer/{customerId}")
@@ -106,7 +119,8 @@ public class ScheduleController {
 
         for(Pet p : pets) {
             for(Schedule s : scheduleService.getScheduleForPet(p.getId())) {
-                scheduleDTOs.add(convertScheduleToScheduleDTO(s));
+                // scheduleDTOs.add(convertScheduleToScheduleDTO(s));
+                scheduleDTOs.add(findSpecificSchedules2(scheduleService.getScheduleForPet2(p.getId())));
             }
         }
 

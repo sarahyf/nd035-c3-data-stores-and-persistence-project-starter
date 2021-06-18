@@ -8,6 +8,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -93,21 +94,20 @@ public class UserController {
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        // Calendar c = Calendar.getInstance();
-        // c.setTime(employeeDTO.getDate().);
-        // int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        List<Employee> employees = userService.getAllEmployees();
+        List<EmployeeDTO> availableEmployees = new ArrayList<EmployeeDTO>();
 
-        List<Employee> employee = userService.findEmployeesForService(employeeDTO.getSkills(), employeeDTO.getDate().getDayOfWeek());
-        List<EmployeeDTO> availableEmployees = null;
-
-        if(employee != null) {
-            availableEmployees = new ArrayList<EmployeeDTO>();
-            for(Employee e : employee) {
+        for(Employee e : employees) {
+            if (e.getSkills().equals(employeeDTO.getSkills())
+                && e.getDaysAvailable().contains(employeeDTO.getDate().getDayOfWeek())) {
                 availableEmployees.add(convertEmployeeToEmployeeDTO(e));
             }
-        } else {
-            // throw new Exception("no employees for service");
         }
+
+        if(availableEmployees.isEmpty()) {
+            throw new UnsupportedOperationException();
+        }
+
         return availableEmployees;
     }
 

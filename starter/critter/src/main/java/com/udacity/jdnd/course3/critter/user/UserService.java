@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class UserService {
     @Autowired
     CustomerRepository customerRepository;
@@ -45,16 +46,26 @@ public class UserService {
         return employeeRepository.findById(employeeId);
     }
 
-    public void updateEmployeeSchedule(Set<DayOfWeek> daysAvailable, long employeeId) {
-        // System.out.println(daysAvailable);
-        // System.out.println(daysAvailable.iterator());
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
 
-       employeeRepository.updateEmployeeSchedule(daysAvailable, employeeId);
-    // employeeRepository.updateEmployeeSchedule(employeeId, "S");
+    public void updateEmployeeSchedule(Set<DayOfWeek> daysAvailable, long employeeId) {
+        employeeRepository.getOne(employeeId).setDaysAvailable(daysAvailable);
     }
 
     public List<Employee> findEmployeesForService(Set<EmployeeSkill> skills, DayOfWeek dayOfWeek) {
-        return employeeRepository.findEmployeesForService(skills, dayOfWeek);
+        List<Employee> employees = getAllEmployees();
+
+        for (Employee e : employees) {
+            if (!e.getSkills().equals(skills) && !e.getDaysAvailable().contains(dayOfWeek)) {
+                employees.remove(e);
+            }
+        }
+
+        // return employeeRepository.findEmployeesForService(skills, dayOfWeek);
+        // return employeeRepository.getOne(employeeId).setDaysAvailable(daysAvailable);
+        return employees;
     }
 
 }
