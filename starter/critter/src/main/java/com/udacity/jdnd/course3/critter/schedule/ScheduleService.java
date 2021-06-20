@@ -38,20 +38,6 @@ public class ScheduleService {
         return petSchedules;
     }
 
-    public Schedule getScheduleForPet2(long petId) {
-        List<Schedule> schedules = getAllSchedules();
-        Schedule petSchedules = null;
-
-        for (Schedule s : schedules) {
-            for (Pet p : s.getPets()) {
-                if (p.getId() == petId) {
-                    petSchedules = s;
-                }
-            }
-        }
-        return petSchedules;
-    }
-
     public List<Schedule> getScheduleForEmployee(long employeeId) {
         List<Schedule> schedules = getAllSchedules();
         List<Schedule> employeeSchedules = new ArrayList<Schedule>();

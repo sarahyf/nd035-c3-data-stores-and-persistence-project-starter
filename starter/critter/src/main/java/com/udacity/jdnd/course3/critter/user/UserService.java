@@ -1,6 +1,7 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,16 +57,15 @@ public class UserService {
 
     public List<Employee> findEmployeesForService(Set<EmployeeSkill> skills, DayOfWeek dayOfWeek) {
         List<Employee> employees = getAllEmployees();
+        List<Employee> availableEmployees = new ArrayList<Employee>();
 
         for (Employee e : employees) {
-            if (!e.getSkills().equals(skills) && !e.getDaysAvailable().contains(dayOfWeek)) {
-                employees.remove(e);
+            if (e.getSkills().equals(skills)
+                    && e.getDaysAvailable().contains(dayOfWeek)) {
+                availableEmployees.add(e);
             }
         }
-
-        // return employeeRepository.findEmployeesForService(skills, dayOfWeek);
-        // return employeeRepository.getOne(employeeId).setDaysAvailable(daysAvailable);
-        return employees;
+        return availableEmployees;
     }
 
 }

@@ -35,29 +35,13 @@ public class ScheduleController {
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
         Schedule schedule = convertScheduleDTOToSchedule(scheduleDTO);
 
-        // for(Pet p : schedule.getPets()) {
-        //     if(petService.getPet(p.getId()) == null) {
-        //         throw new UnsupportedOperationException();
-        //     }
-        // }
-
         List<Employee> employees = userService.findEmployeesForService(schedule.getActivities(),
                 schedule.getDate().getDayOfWeek());
 
         if(employees != null && !employees.isEmpty()) {
             return convertScheduleToScheduleDTO(scheduleService.createSchedule(schedule));
         }
-
-        // for(Employee e : schedule.getEmployees()) {
-        //     try {
-        //             if(userService.getEmployee(e.getId()) == null || !employees.contains(e)) {
-        //                 throw new UnsupportedOperationException();
-        //             }
-        //     } catch(NullPointerException exception) {
-        //         throw new UnsupportedOperationException();
-        //     }
-        // }
-
+        
         throw new UnsupportedOperationException();
     }
 
@@ -75,56 +59,42 @@ public class ScheduleController {
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        // List<ScheduleDTO> scheduleDTOs = new ArrayList<ScheduleDTO>();
-        // List<Schedule> schedules = scheduleService.getScheduleForPet(petId);
-
-        // if(!schedules.isEmpty()) {
-        //     for (Schedule s : schedules) {
-        //         scheduleDTOs.add(convertScheduleToScheduleDTO(s));
-        //     }
-        // }
-
-        return findSpecificSchedules(scheduleService.getScheduleForPet(petId));
-        // return scheduleDTOs;
+        return convertSpecificSchedulesToDTO(scheduleService.getScheduleForPet(petId));
     }
 
     @GetMapping("/employee/{employeeId}")
     public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
-        return findSpecificSchedules(scheduleService.getScheduleForEmployee(employeeId));
+        return convertSpecificSchedulesToDTO(scheduleService.getScheduleForEmployee(employeeId));
     }
 
-    public List<ScheduleDTO> findSpecificSchedules(List<Schedule> schedules) {
+    public List<ScheduleDTO> convertSpecificSchedulesToDTO(List<Schedule> schedules) {
         List<ScheduleDTO> scheduleDTOs = new ArrayList<ScheduleDTO>();
         if (!schedules.isEmpty()) {
             for (Schedule s : schedules) {
                 scheduleDTOs.add(convertScheduleToScheduleDTO(s));
             }
         }
-
         return scheduleDTOs;
-    }
-
-    public ScheduleDTO findSpecificSchedules2(Schedule schedule) {
-        ScheduleDTO scheduleDTO = new ScheduleDTO();
-        if (schedule != null) {
-                scheduleDTO = convertScheduleToScheduleDTO(schedule);
-        }
-        return scheduleDTO;
     }
 
     @GetMapping("/customer/{customerId}")
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
         List<Pet> pets = petService.getPetsByOwner(customerId);
-        List<ScheduleDTO> scheduleDTOs = new ArrayList<ScheduleDTO>();
+        List<List<ScheduleDTO>> scheduleDTOs = new ArrayList<List<ScheduleDTO>>();
+        
+        List<ScheduleDTO> allScheduleDTOs = new ArrayList<ScheduleDTO>();
 
         for(Pet p : pets) {
-            for(Schedule s : scheduleService.getScheduleForPet(p.getId())) {
-                // scheduleDTOs.add(convertScheduleToScheduleDTO(s));
-                scheduleDTOs.add(findSpecificSchedules2(scheduleService.getScheduleForPet2(p.getId())));
+            scheduleDTOs.add(convertSpecificSchedulesToDTO(scheduleService.getScheduleForPet(p.getId())));
+        }
+
+        for(List<ScheduleDTO> listOfSchedules : scheduleDTOs) {
+            for(ScheduleDTO aSchedule : listOfSchedules) {
+                allScheduleDTOs.add(aSchedule);
             }
         }
 
-        return scheduleDTOs;
+        return allScheduleDTOs;
     }
 
     private ScheduleDTO convertScheduleToScheduleDTO(Schedule schedule) {

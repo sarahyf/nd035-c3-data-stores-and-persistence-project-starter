@@ -11,10 +11,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     
-    // @Query("select s from Schedule s, Pet p where s.pets.petId = p.petId and p.petId = :petId")
-    // public List<Schedule> getScheduleForPet(@Param("petId") Long petId);
-
-    // @Query("select s from Schedule s where s.employees.employeeId = :employeeId")
-    // public List<Schedule> getScheduleForEmployee(@Param("employeeId") Long employeeId);
 
 }

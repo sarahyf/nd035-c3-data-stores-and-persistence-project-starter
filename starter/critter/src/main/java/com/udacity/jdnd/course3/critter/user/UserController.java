@@ -94,21 +94,19 @@ public class UserController {
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        List<Employee> employees = userService.getAllEmployees();
-        List<EmployeeDTO> availableEmployees = new ArrayList<EmployeeDTO>();
-
-        for(Employee e : employees) {
-            if (e.getSkills().equals(employeeDTO.getSkills())
-                && e.getDaysAvailable().contains(employeeDTO.getDate().getDayOfWeek())) {
-                availableEmployees.add(convertEmployeeToEmployeeDTO(e));
-            }
-        }
+        List<Employee> availableEmployees = userService.findEmployeesForService(employeeDTO.getSkills(),
+                employeeDTO.getDate().getDayOfWeek());
+        List<EmployeeDTO> availableEmployeesDTO = new ArrayList<EmployeeDTO>();
 
         if(availableEmployees.isEmpty()) {
             throw new UnsupportedOperationException();
         }
 
-        return availableEmployees;
+        for(Employee e : availableEmployees) {
+            availableEmployeesDTO.add(convertEmployeeToEmployeeDTO(e));
+        }
+
+        return availableEmployeesDTO;
     }
 
     private CustomerDTO convertCustomerToCustomerDTO(Customer customer) {
