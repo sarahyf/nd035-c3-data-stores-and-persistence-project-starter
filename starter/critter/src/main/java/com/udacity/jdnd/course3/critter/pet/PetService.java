@@ -3,10 +3,6 @@ package com.udacity.jdnd.course3.critter.pet;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-
 import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.entity.PetRepository;
 
@@ -18,7 +14,6 @@ public class PetService {
     @Autowired
     PetRepository petRepository;
 
-    @Transactional
     public Pet savePet(Pet pet) {
         return petRepository.save(pet);
     }

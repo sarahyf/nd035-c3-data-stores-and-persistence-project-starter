@@ -1,7 +1,5 @@
 package com.udacity.jdnd.course3.critter.schedule;
 
-import org.apache.catalina.User;
-import org.checkerframework.checker.units.qual.s;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +11,6 @@ import com.udacity.jdnd.course3.critter.entity.Employee;
 import com.udacity.jdnd.course3.critter.entity.Pet;
 import com.udacity.jdnd.course3.critter.entity.Schedule;
 import com.udacity.jdnd.course3.critter.pet.PetService;
-import com.udacity.jdnd.course3.critter.user.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.user.UserService;
 
 /**
@@ -33,16 +30,7 @@ public class ScheduleController {
 
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
-        Schedule schedule = convertScheduleDTOToSchedule(scheduleDTO);
-
-        List<Employee> employees = userService.findEmployeesForService(schedule.getActivities(),
-                schedule.getDate().getDayOfWeek());
-
-        if(employees != null && !employees.isEmpty()) {
-            return convertScheduleToScheduleDTO(scheduleService.createSchedule(schedule));
-        }
-        
-        throw new UnsupportedOperationException();
+        return convertScheduleToScheduleDTO(scheduleService.createSchedule(convertScheduleDTOToSchedule(scheduleDTO)));
     }
 
     @GetMapping

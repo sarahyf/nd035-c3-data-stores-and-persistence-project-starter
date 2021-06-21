@@ -15,6 +15,7 @@ import com.udacity.jdnd.course3.critter.entity.EmployeeRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @Transactional
@@ -38,7 +39,6 @@ public class UserService {
         return customerRepository.findAll();
     }
 
-    // @Transactional
     public Employee saveEmployee(Employee employee) {
         return employeeRepository.save(employee);
     }
@@ -60,9 +60,14 @@ public class UserService {
         List<Employee> availableEmployees = new ArrayList<Employee>();
 
         for (Employee e : employees) {
-            if (e.getSkills().equals(skills)
-                    && e.getDaysAvailable().contains(dayOfWeek)) {
-                availableEmployees.add(e);
+            if(e.getSkills().size() == skills.size()) {
+                if (e.getSkills().equals(skills) && e.getDaysAvailable().contains(dayOfWeek)) {
+                    availableEmployees.add(e);
+                }
+            } else {
+                if (CollectionUtils.containsAny(e.getSkills(), (skills)) && e.getDaysAvailable().contains(dayOfWeek)) {
+                    availableEmployees.add(e);
+                }
             }
         }
         return availableEmployees;
